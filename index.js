@@ -32,6 +32,11 @@ async function getInfoByMediaId(mediaId) {
 
 exports.handler = async (event) => {
   let browser = null;
+
+  const notFoundResponse = {
+    statusCode: 404,
+    body: JSON.stringify('Not found.'),
+  };
   try {
     browser = await chromium.puppeteer.launch({
       args: chromium.args,
@@ -44,24 +49,26 @@ exports.handler = async (event) => {
     const url = event.queryStringParameters.url;
     await page.goto(`view-source:${url}`);
     const content = await page.content();
+    if (!content) {
+      return notFoundResponse;
+    }
     const part1 = content.split('instagram://media?id=')[1];
+
+    if (!part1) {
+      return notFoundResponse;
+    }
+
     const mediaId = part1.split('</span>')[0];
   
     if (!mediaId) {
-      return {
-        statusCode: 400,
-        body: JSON.stringify('Bad request.'),
-      };
+      return notFoundResponse;
     }
   
     const { data: postMeta } = await getInfoByMediaId(mediaId)
     const postDetails = postMeta.items[0];
 
     if (!postDetails) {
-      return {
-        statusCode: 404,
-        body: JSON.stringify('Not found.'),
-      };
+      return notFoundResponse;
     }
 
     const data = {};
@@ -87,6 +94,7 @@ exports.handler = async (event) => {
       body: JSON.stringify(data),
     };
   } catch (error) {
+    console.log(error);
     return {
       statusCode: 400,
       body: JSON.stringify('An error occurred.'),
