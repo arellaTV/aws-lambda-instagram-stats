@@ -56,10 +56,18 @@ exports.handler = async (event) => {
   
     const { data: postMeta } = await getInfoByMediaId(mediaId)
     const postDetails = postMeta.items[0];
+
+    if (!postDetails) {
+      return {
+        statusCode: 404,
+        body: JSON.stringify('Not found.'),
+      };
+    }
+
     const data = {};
     data.title = escapeEmoji(postDetails.caption.text);
 
-    if (postDetails.carousel_media[0]) {
+    if (postDetails.carousel_media) {
       data.thumbnailSrc = postDetails.carousel_media[0].image_versions2?.candidates[0]?.url
     }
 
