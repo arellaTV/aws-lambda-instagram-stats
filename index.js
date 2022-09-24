@@ -89,6 +89,7 @@ exports.handler = async (event) => {
     data.comments = postDetails.comment_count;
     data.publishDate = (new Date(postDetails.caption.created_at * 1000)).toISOString();
     data.channel = postDetails.caption.user.username
+    data.postType = postDetails.product_type
     return {
       statusCode: 200,
       body: JSON.stringify(data),
