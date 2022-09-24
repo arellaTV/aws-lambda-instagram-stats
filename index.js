@@ -54,18 +54,26 @@ exports.handler = async (event) => {
       };
     }
   
-    const { data: videoMeta } = await getInfoByMediaId(mediaId)
-    const videoDetails = videoMeta.items[0];
+    const { data: postMeta } = await getInfoByMediaId(mediaId)
+    const postDetails = postMeta.items[0];
     const data = {};
-    data.title = escapeEmoji(videoDetails.caption.text);
-    data.thumbnailSrc = videoDetails.image_versions2.candidates[0].url
-    data.duration = videoDetails.video_duration;
-    data.views = videoDetails.view_count;
-    data.postId = videoDetails.pk;
-    data.likes = videoDetails.like_count;
-    data.comments = videoDetails.comment_count;
-    data.publishDate = (new Date(videoDetails.caption.created_at * 1000)).toISOString();
-    data.channel = videoDetails.caption.user.username
+    data.title = escapeEmoji(postDetails.caption.text);
+
+    if (postDetails.carousel_media[0]) {
+      data.thumbnailSrc = postDetails.carousel_media[0].image_versions2?.candidates[0]?.url
+    }
+
+    if (postDetails.image_versions2) {
+      data.thumbnailSrc = postDetails.image_versions2?.candidates[0]?.url
+    }
+
+    data.duration = postDetails.video_duration;
+    data.views = postDetails.view_count;
+    data.postId = postDetails.pk;
+    data.likes = postDetails.like_count;
+    data.comments = postDetails.comment_count;
+    data.publishDate = (new Date(postDetails.caption.created_at * 1000)).toISOString();
+    data.channel = postDetails.caption.user.username
     return {
       statusCode: 200,
       body: JSON.stringify(data),
