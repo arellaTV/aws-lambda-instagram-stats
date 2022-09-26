@@ -83,7 +83,7 @@ exports.handler = async (event) => {
     }
 
     data.duration = postDetails.video_duration;
-    data.views = postDetails.view_count;
+    data.views = postDetails.play_count || postDetails.view_count;
     data.postId = postDetails.pk;
     data.likes = postDetails.like_count;
     data.comments = postDetails.comment_count;
