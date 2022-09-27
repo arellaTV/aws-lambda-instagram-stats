@@ -1,3 +1,5 @@
+const instaTouch = require('instatouch');
+
 const escapeEmoji = (text) => {
   return text.replace(/[^\p{L}\p{N}\p{P}\p{Z}]/gu, '');
 }
