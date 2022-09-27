@@ -12,7 +12,8 @@ exports.handler = async (event) => {
   try {
     const url = event.queryStringParameters.url;
     const parsedUrl = new URL(url);
-    const normalizedUrl = parsedUrl.origin + parsedUrl.pathname;
+    const urlWithoutQueryString = parsedUrl.origin + parsedUrl.pathname;
+    const normalizedUrl = urlWithoutQueryString.replace("/tv/", "/p/");
 
     if (!normalizedUrl) {
       return {
