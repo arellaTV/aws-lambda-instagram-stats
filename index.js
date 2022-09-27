@@ -52,8 +52,8 @@ exports.handler = async (event) => {
   } catch (error) {
     console.log(error);
     return {
-      statusCode: 400,
-      body: JSON.stringify('An error occurred.'),
+      statusCode: 404,
+      body: JSON.stringify(error),
     };
   }
 };
