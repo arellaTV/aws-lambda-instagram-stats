@@ -30,6 +30,11 @@ exports.handler = async (event) => {
 
     if (postDetails.caption) {
       data.title = escapeEmoji(postDetails.caption.text);
+      data.publishDate = (new Date(postDetails.caption.created_at * 1000)).toISOString();
+    }
+
+    if (postDetails.taken_at) {
+      data.publishDate = (new Date(postDetails.taken_at * 1000)).toISOString();
     }
 
     if (postDetails.carousel_media) {
@@ -45,7 +50,6 @@ exports.handler = async (event) => {
     data.postId = postDetails.pk;
     data.likes = postDetails.like_count;
     data.comments = postDetails.comment_count;
-    data.publishDate = (new Date(postDetails.caption.created_at * 1000)).toISOString();
     data.channel = postDetails.caption.user.username
     data.postType = postDetails.product_type
     return {
