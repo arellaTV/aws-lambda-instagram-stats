@@ -27,7 +27,10 @@ exports.handler = async (event) => {
     const postDetails = postMeta.items[0];
 
     const data = {};
-    data.title = escapeEmoji(postDetails.caption.text);
+
+    if (postDetails.caption) {
+      data.title = escapeEmoji(postDetails.caption.text);
+    }
 
     if (postDetails.carousel_media) {
       data.thumbnailSrc = postDetails.carousel_media[0].image_versions2?.candidates[0]?.url
