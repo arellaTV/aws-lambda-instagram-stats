@@ -21,11 +21,10 @@ exports.handler = async (event) => {
 
     const options = { session: process.env.SESSION_ID }
     const postMeta = await instaTouch.getPostMeta(url, options)
-    const postDetails = postMeta.items[0];
-
-    if (!postDetails.items) {
+    if (!postMeta.items) {
       return notFoundResponse;
     }
+    const postDetails = postMeta.items[0];
 
     const data = {};
     data.title = escapeEmoji(postDetails.caption.text);
