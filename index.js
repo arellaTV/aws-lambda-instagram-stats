@@ -11,8 +11,10 @@ exports.handler = async (event) => {
   };
   try {
     const url = event.queryStringParameters.url;
+    const parsedUrl = new URL(url);
+    const normalizedUrl = parsedUrl.origin + parsedUrl.pathname;
 
-    if (!url) {
+    if (!normalizedUrl) {
       return {
         statusCode: 400,
         body: JSON.stringify('Bad request.'),
@@ -20,7 +22,7 @@ exports.handler = async (event) => {
     }
 
     const options = { session: process.env.SESSION_ID }
-    const postMeta = await instaTouch.getPostMeta(url, options)
+    const postMeta = await instaTouch.getPostMeta(normalizedUrl, options)
     if (!postMeta.items) {
       return notFoundResponse;
     }
